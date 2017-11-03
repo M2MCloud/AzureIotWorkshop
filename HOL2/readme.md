@@ -60,6 +60,7 @@ We need to create a storage account which will be used to store blob and table d
 
    ![createstor](content/storcreate.png)
 1. In the `Create Storage Account` Blade, give your storage account a name. The name must be globally unique, 24 characters or fewer and contain only alpha-numeric characters. Configure the storage account settings as follows and click `Create`:
+
    ![newstor](content/newstor.png)
 
 We won't be using the storage account until later. When the deployment succeeds, you don't need to go to the resource immediately. You can move straight on to the next section
@@ -106,11 +107,10 @@ The first output will be for an archive of raw data received from the device.
 1. Under `Job Topology` select `Outputs`
 
    ![outputs](content/asaoutputs.png)
-1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`
+1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`, selecting the storage account you created earlier as the `Storage account` option
 
    ![addoutput](content/createoutput.png)
-   1. Ensure you select the storage account created in the earlier step
-   1. The Partition Key is `deviceId` and the Row Key is `EventEnqueuedUtcTime`
+   1. For copy-paste convenience, the Partition Key is `deviceId` and the Row Key is `EventEnqueuedUtcTime`
 1. Click the cross in the output blade to go back to the streaming job overview
 
 ### Add A Query
@@ -120,7 +120,7 @@ The first output will be for an archive of raw data received from the device.
    ![outputs](content/asaquery.png)
 1. You should see the following Query Blade:
 
-   ![qryblade](content/qryblade.png)
+   ![qryblade](content/qryblade.PNG)
 1. Replace the Query Text with the following and click `Save` confirming the changes when prompted:
    ```sql
    SELECT
@@ -137,12 +137,25 @@ The first output will be for an archive of raw data received from the device.
    ![startasa](content/startasa.png)
 1. Start the device simulator and send some messages to the IoT Hub
 1. Open Azure Storage Explorer and connect to your subscription ([see the Microsoft Documentation for instructions](https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer))
-1. Find the Storage Account you created earlier, expand the tables node, find the `archive` table and double click to open and view the data
+1. Find the Storage Account you created earlier, expand the tables node, find the `archive` table and double click to open and view the archived data
 
 ### Create a CosmosDB Account
 
-### Add The Aggregated Data Output
-
 Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
+
+1. In the `censis-workshop` Resource Group blade, select add in the top left
+
+   ![add](content/add.png)
+1. In the search box type "Cosmos DB" and select the suggestion
+
+   ![searchcdb](content/searchcdb.png)
+1. Select `Azure Cosmos DB` and click `Create`
+
+   ![createcdb](content/createcdb.png)
+1. In the `New Account` Blade, enter the values as follows. The `ID` must be globally unique across all Cosmos DB Accounts (you can use the same value used for the IoT Hub Name) and ensure `SQL (document)` is selected as the API
+
+   ![newcdb](content/newcdb.png)
+
+### Add The Aggregated Data Output
 
 ### Amend The Query For Aggregated Data Output
