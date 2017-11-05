@@ -19,12 +19,16 @@
 ## Objectives and Requirements
 
 ### Objectives
-
-1. Use [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) to connect and manage a simulated IoT Asset
-1. Output processed data from Stream Analytics to:
-   1. [Azure Table Storage](https://azure.microsoft.com/en-gb/services/storage/tables/)
-   1. [Azure CosmosDB](https://azure.microsoft.com/en-gb/services/cosmos-db/)
-   1. Create an [Azure Logic App](https://azure.microsoft.com/en-gb/services/logic-apps/) to send alerts
+1. Create Azure Resource Group
+1. Create an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
+1. Use [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) to manage a simulated IoT Asset
+1. Send a Device Message(s) to the IoT Hub
+1. Send a massive Device Message to the IoT Hub
+1. Read and Write Device Twin Properties
+1. Receive a message from the IoT Hub
+    1. Cloud to Device Message 
+    1. Direct Method Invocation
+   
 
 ### Requirements
 
@@ -37,13 +41,76 @@
 
 ### Prerequisites
 
-Activities in this lab take place within the Azure Portal. 
+Activities in this lab take place within the Azure Portal and Visual Studio. 
 
+### Create a Resource Group
 1. Navigate to the [Azure Portal](https://portal.azure.com)
 1. Select "Resource Groups" from the menu on the left
 
-   ![select resource group](content/selectresourcegroup.png)
-1. Select the `censis-workshop` resource group you created in the previous Hands On Lab
+    ![create resource group](content/addnewresourcegroup.png)
+1. Click the Add button
+   
+   ![configure resource group](content/resourcegroupname.png)
+1. Name the Resource Group `censis-workshop`
+
+1. Click the Create button to Create your new Resource Group
+
+    ![go to resource group](content/GoToResourceGroup.png)
+1. Navigate to your newly created Resoure Group. You can also navigate to the your newly created Resource Group by clicking on "Resource Groups" in the main navigation menu on the left. 
+
+### Create an Azure IoT Hub
+1. Navigate to your Resource Group if you have not done so already
+
+![add new resource to  resource group](content/AddResourceToResourceGroup.png)
+1. Click the Add button to add a new resource to your Resource Group
+
+![select iot hub resource](content/TypeThenSelectIoTHub.png)
+1. In the search box type `iot hub` and select the IoT Hub resource that appears in the results list
+
+![configure iot hub](content/IoTHubNameThenCreate.png)
+1. Give you iot hub a unique name, e.g. `censis-workshop-somethingunique`
+1. Click "Pricing and scale tier and select the "Free" pricing tier
+1. Wait!  ^ Make sure you have selected "Pricing and scale tier" is on the "Free" tier ^ : ) 
+1. In "Resource Group" use the newly created, existing `censis-workshop` resource group
+1. In "Location" select "UK West"
+1. Click the "Create" button to create a new IoT Hub
+1. Navigate to the the newly created IoT Hub either by clicking on the notification that appears (or by using the "Search resources, services and docs" text box at the very top of the page)
+
+### Use Azure IoT Hub to manage a simulated IoT Asset
+
+We need to register a Device with the newly created IoT Hub so the hub can authorise the connect and send requests from the Device. 
+1. Navigate to the newly create IoT Hub ("Resource Groups -> "censis-workshop" -> "name of your iot hub")
+
+![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
+1. Click on "Device Explorer on the left hand side menu
+1. Click on "Add Device" 
+
+![add a new device](content/DeviceExplorerAddDevice.png)
+1. Give the Device a unique identifier that will allow the IoT Hub to identifiy this Device
+1. Click on "Save" to create the Device
+
+![select the new device](content/DeviceExplorerAddDevice.png)
+1. Select the newly created Device by clicking on the Device in the Device Explorer list and view it's Device Details. 
+
+![associate storage account container with the iot hub](content/DeviceExplorerFileUpload.png)
+1. Associate a storage account container with IoT Hub by clicking on "File Upload" on the left hand side menu
+
+![create storage account container with the iot hub](content/DeviceExplorerFileUploadContainer.png)
+1. Select the previously created Storage Account, "censisworkshop" and create a new container within that Storage Account named "fileupload".
+
+![save storage account container against the iot hub](content/DeviceExplorerFileUploadSave.png)
+1. Select the newly created container and click "Save"
+
+1. We're now ready to start messing around with the IoT Hub. 
+
+### Send a Device Message(s) to the IoT Hub
+
+1. 
+
+
+
+
+
 
 ### Create a General Purpose Storage Account
 
@@ -64,97 +131,5 @@ We need to create a storage account which will be used to store blob and table d
 
 We won't be using the storage account until later. When the deployment succeeds, you don't need to go to the resource immediately. You can move straight on to the next section
 
-### Create an Azure Stream Analytics Job
 
-We will create an Azure Stream Analytics Job which will be used to perform aggregations on the data as well as storing data in an archive.
 
-1. In the `censis-workshop` Resource Group blade, select add in the top left
-
-   ![add](content/add.png)
-1. In the search box type "Azure Stream Analytics" and select the suggestion
-
-   ![searchasa](content/searchasa.png)
-1. Select `Stream Analytics job` from the results and click `Create`
-
-   ![create](content/createasas.png)
-1. In the `New Stream Analytics job` blade, fill in the values as follows (selecting your subscription where relevant) and click `Create`:
-
-   ![newasa](content/newasa.png)
-1. When the deployment completes, select `Go to resource` in the notification
-
-   ![gotoasa](content/gotoasajob.png)
-
-You should now see the following:
-![created](content/created.png)
-
-### Create The Job Input
-
-The streaming job will take input from the IoT Hub created in the previous lab.
-
-1. Under `Job Topology` select `Inputs`
-
-   ![inputs](content/asainputs.png)
-1. In the inputs blade, select Add and populate the fields as follows and click `Create`
-
-   ![addinput](content/createinput.png)
-1. Click the cross in the input blade to go back to the streaming job overview
-
-### Add The Archive output
-
-The first output will be for an archive of raw data received from the device.
-
-1. Under `Job Topology` select `Outputs`
-
-   ![outputs](content/asaoutputs.png)
-1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`, selecting the storage account you created earlier as the `Storage account` option
-
-   ![addoutput](content/createoutput.png)
-   1. For copy-paste convenience, the Partition Key is `deviceId` and the Row Key is `EventEnqueuedUtcTime`
-1. Click the cross in the output blade to go back to the streaming job overview
-
-### Add A Query
-
-1. Under `Job Topology` select `Query`
-
-   ![outputs](content/asaquery.png)
-1. You should see the following Query Blade:
-
-   ![qryblade](content/qryblade.PNG)
-1. Replace the Query Text with the following and click `Save` confirming the changes when prompted:
-   ```sql
-   SELECT
-       *
-   INTO
-       [archive]
-   FROM
-       [iot-hub]
-   ```
-1. Click the cross in the query blade to go back to the streaming job overview
-1. Click `Start` in the Stream Analytics Job overview blade
-1. Select `Now` when prompted then click `Start`
-
-   ![startasa](content/startasa.png)
-1. Start the device simulator and send some messages to the IoT Hub
-1. Open Azure Storage Explorer and connect to your subscription ([see the Microsoft Documentation for instructions](https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer))
-1. Find the Storage Account you created earlier, expand the tables node, find the `archive` table and double click to open and view the archived data
-
-### Create a CosmosDB Account
-
-Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
-
-1. In the `censis-workshop` Resource Group blade, select add in the top left
-
-   ![add](content/add.png)
-1. In the search box type "Cosmos DB" and select the suggestion
-
-   ![searchcdb](content/searchcdb.png)
-1. Select `Azure Cosmos DB` and click `Create`
-
-   ![createcdb](content/createcdb.png)
-1. In the `New Account` Blade, enter the values as follows. The `ID` must be globally unique across all Cosmos DB Accounts (you can use the same value used for the IoT Hub Name) and ensure `SQL (document)` is selected as the API
-
-   ![newcdb](content/newcdb.png)
-
-### Add The Aggregated Data Output
-
-### Amend The Query For Aggregated Data Output
