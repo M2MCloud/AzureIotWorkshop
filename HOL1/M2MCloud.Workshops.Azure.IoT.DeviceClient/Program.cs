@@ -1,11 +1,12 @@
-﻿using Microsoft.Azure.Devices.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
+
 
 namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
 {
@@ -15,9 +16,9 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
         private const string DeviceConnectionString = "HostName=M2M-Office.azure-devices.net;DeviceId=000356865805524;SharedAccessKey=myLoxhifW+dri1KFjkWpXvt70ODd/0A/WJKTnElN/M8=";
         //attendee to change
         private const string IoTHubStorageAccountName = "fileupload";
-        //attendee to change
-        private static String deviceId = "000356865805524";
 
+
+        private static String deviceId = "000356865805524";
         private static Microsoft.Azure.Devices.Client.DeviceClient deviceClient;
         private static string pressAnyKeyToReturnToTheMainMenu = "\nPress any key to return to the main menu";
 
@@ -30,23 +31,21 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                     InitialiseDevice().Wait();
                     Console.Clear();
                     ShowDeviceMenu().Wait();
-                    //ReceiveCommands(deviceClient).Wait();
                     Console.ReadKey();
                 }
                 catch (Exception ex)
-                {
+                {   
                     Console.WriteLine($"Something bad happened unexpectedly.\n{ex.Message}");
                     Console.WriteLine(pressAnyKeyToReturnToTheMainMenu);
                     Console.ReadKey();
+                    deviceClient?.CloseAsync();
                 }
             }
-
-
         }
 
         private static async Task InitialiseDevice()
         {
-            deviceClient = DeviceClient.CreateFromConnectionString(DeviceConnectionString, TransportType.Mqtt_WebSocket_Only);
+            deviceClient = Microsoft.Azure.Devices.Client.DeviceClient.CreateFromConnectionString(DeviceConnectionString, TransportType.Http1);
             await deviceClient.OpenAsync();
             await deviceClient.SetMethodHandlerAsync("stop", StopThePumpNow, null);
             await deviceClient.SetMethodHandlerAsync("start", StartThePumpNow, null);
@@ -57,34 +56,47 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("*** Device - M2M Model X1 ***");
+                Console.WriteLine("*** CENSIS Workshop Device - M2M Model X2711 ***");
                 Console.WriteLine("\nDevice Menu\n");
                 Console.WriteLine("1. Send Device to Cloud Message(s)");
-                Console.WriteLine("2. Read Device Twin Properties");
-                Console.WriteLine("3. Write Device Twin Reported Properties");
-                Console.WriteLine("4. Send MASSIVE Device Message sample");
+                Console.WriteLine("2. Send MASSIVE Device Message sample");
+                Console.WriteLine("3. Read Device Twin Properties");
+                Console.WriteLine("4. Write Device Twin Reported Properties");
                 Console.WriteLine("5. Receive Cloud to Device Message");
 
                 Console.WriteLine("\nReady for Direct Method");
 
                 var menuItemResult = Console.ReadKey();
-                if (menuItemResult.KeyChar.ToString() == "1")
-                    await SendEvent();
-                if (menuItemResult.KeyChar.ToString() == "2")
-                    await ReadDeviceTwin();
-                if (menuItemResult.KeyChar.ToString() == "3")
-                    await WriteDeviceTwin();
-                if (menuItemResult.KeyChar.ToString() == "4")
-                    await UploadDeviceMessages();
-                if (menuItemResult.KeyChar.ToString() == "5")
-                    await ReceiveCommands();
+                switch (menuItemResult.KeyChar.ToString())
+                {
+                    case "1":
+                        await SendEvent();
+                        break;
+                    case "2":
+                        await UploadDeviceMessages(); 
+                        break;
+                    case "3":
+                        await ReadDeviceTwin();
+                        break;
+                    case "4":
+                        await WriteDeviceTwin();
+                        break;
+                    case "5":
+                        await ReceiveCommands();
+                        break;
+                    default:
+                        Console.WriteLine("Sorry, don't recognise that menu item number.");
+                        break;
+                }
             }
         }
 
         private static async Task UploadDeviceMessages()
         {
-            Console.WriteLine("What is the full file path of the massive Device Message samples?");
+            Console.WriteLine("\nWhat is the full file path of the massive Device Message samples?");
             var path = Console.ReadLine();
+            if(path==null)
+                throw new InvalidOperationException("Please input a valid file path");
             path = path.Replace("\"", "");
             using (var sourceData = new FileStream(path, FileMode.Open))
             {
@@ -121,7 +133,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
         {
             Console.WriteLine("\nHow many messages to do you want to send?");
             var numberMessagesToSendString = Console.ReadLine();
-            var numberMessagesToSend = int.Parse(numberMessagesToSendString);
+            var numberMessagesToSend = int.Parse(numberMessagesToSendString ?? throw new InvalidOperationException("Please input a number"));
 
             Console.WriteLine("\nDevice sending {0} messages to IoTHub...\n", numberMessagesToSend);
 
