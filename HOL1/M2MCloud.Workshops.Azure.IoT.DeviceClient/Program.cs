@@ -13,12 +13,12 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
     class Program
     {
         //attendee to change
-        private const string DeviceConnectionString = "HostName=M2M-Office.azure-devices.net;DeviceId=000356865805524;SharedAccessKey=myLoxhifW+dri1KFjkWpXvt70ODd/0A/WJKTnElN/M8=";
+        private const string DeviceConnectionString = "HostName=censis-workshop-lab101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=WB94k41+2OSW7uUbOrJHveL13nXCKpVqiG63syzDz8M=";
         //attendee to change
         private const string IoTHubStorageAccountName = "fileupload";
 
 
-        private static String deviceId = "000356865805524";
+        private static String deviceId = "956584572537578";
         private static Microsoft.Azure.Devices.Client.DeviceClient deviceClient;
         private static string pressAnyKeyToReturnToTheMainMenu = "\nPress any key to return to the main menu";
 
@@ -45,7 +45,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
 
         private static async Task InitialiseDevice()
         {
-            deviceClient = Microsoft.Azure.Devices.Client.DeviceClient.CreateFromConnectionString(DeviceConnectionString, TransportType.Http1);
+            deviceClient = Microsoft.Azure.Devices.Client.DeviceClient.CreateFromConnectionString(DeviceConnectionString, TransportType.Mqtt_WebSocket_Only);
             await deviceClient.OpenAsync();
             await deviceClient.SetMethodHandlerAsync("stop", StopThePumpNow, null);
             await deviceClient.SetMethodHandlerAsync("start", StartThePumpNow, null);
