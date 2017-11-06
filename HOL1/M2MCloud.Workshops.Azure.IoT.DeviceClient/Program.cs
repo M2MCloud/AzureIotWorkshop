@@ -17,7 +17,6 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
         private const string DeviceConnectionString = "HostName=censis-workshop-lab101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=WB94k41+2OSW7uUbOrJHveL13nXCKpVqiG63syzDz8M=";
         //attendee to change #2
         private static String deviceId = "956584572537578";
-        private const string IoTHubStorageAccountName = "fileupload";
         private static Microsoft.Azure.Devices.Client.DeviceClient deviceClient;
         private static string pressAnyKeyToReturnToTheMainMenu = "\nPress any key to return to the main menu";
         private static ConsoleColor originalConsoleColour;

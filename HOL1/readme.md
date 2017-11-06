@@ -103,7 +103,7 @@ We'e going to create an Azure IoT Hub that will allow us to manage and communiat
 
     ![select iot hub resource](content/TypeThenSelectIoTHub.png)
     
-1. Give you iot hub a globablly unique name, e.g. `censis-workshop-somethingunique`
+1. Give the IoT Hub a globablly unique name, e.g. `censis-workshop-somethingunique`
 
     ![configure iot hub](content/IoTHubNameThenCreate.png)
 
@@ -125,13 +125,13 @@ We need to register a Device with the newly created IoT Hub to authorise Device 
 
 1. Navigate to the newly create IoT Hub ("Resource Groups -> "censis-workshop" -> "name of your iot hub")
     
-1. Click on "Device Explorer on the left hand side menu
+1. Click on "Device Explorer" on the left hand side menu
 
 1. Click on "Add Device" 
 
     ![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
 
-1. Give the Device a unique identifier that will allow the IoT Hub to identifiy this Device. Copy the Device unique identifier and paste the string value into Notepad - we'll use this value in a moment. 
+1. Give the Device a unique identifier that will allow the IoT Hub to identify this Device. Copy the Device unique identifier and paste the string value into Notepad - we'll use this value in a moment. 
 
 1. Click on "Save" to create the Device
 
@@ -175,15 +175,15 @@ Now we're going to send some Device Messages to the IoT Hub.
 
 and set the `DeviceConnectionString` value to the Device Connection String we previously pasted into Notepad.
 
-1. Find the line below the comment 
+1. Find the line below the comment :
 
 ```cs
 //attendee to change #2
 ``` 
 
-and set the `deviceId` value to the Device unique identfifier we previously pasted into Notepad. The `DeviceId` string value you will see in the `DeviceConnectionString` value should match the `deviceId` value you have just set. 
+and set the `deviceId` value to the Device unique identfifier we previously pasted into Notepad. The `DeviceId` string value you see in the `DeviceConnectionString` value should match the `deviceId` value you have just set. 
 
-1. Optional - Find the line below the comment 
+2. Optional - Find the line below the comment 
 
 ```cs 
 //attendee to change #3 (optional)
@@ -215,7 +215,7 @@ or
 
 Change the random number generation as required. 
 
-1. Run the Device simulator (Debug->Start without Debugging or Cntrl + F5 )
+1. Run the Device simulator from Visual Studio (Debug->Start without Debugging or Cntrl + F5 )
 
 1. Choose option "1" from the Device menu, "Send Device to Cloud Message(s)"
 
@@ -235,7 +235,7 @@ We're going to send a large Device message file to the IoT Hub.
 
 1. Choose option "2" from the Device menu, "Send large Device Message file"
 
-1. Grab a full file path that points to a non-sensitive file and paste in the value when prompted. 
+1. Grab a full file path that points to a local, non-sensitive file and paste the value when prompted. 
 
 Let's have a look at the file the Device just uploaded:
 
@@ -255,7 +255,7 @@ Let's have a look at the file the Device just uploaded:
     ![blob item](content/FileUploadBlobDetails.png)
 
 ### Read Device Twin Properties
-We're going to have a look at the desired and report Device Twin properties to demonstrate how they can be used to configure a Device.
+We're going to have a look at the desired and reported Device Twin properties to demonstrate how they can be used to configure a Device and receive state from a Device. 
 
 1. If it's not already, run the Device simulator (Debug->Start without Debugging or Cntrl + F5 )
 
@@ -270,9 +270,9 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 
 1. Choose option "4" from the Device menu, "Write Device Twin Reported Properties"
 
-1. Enter a name for the new Key, e,g. `CellId`. Feel free to choose some reported Device property from your own domain. 
+1. Enter a name for the new reported property , e,g. ```CellId``` Feel free to choose some reported Device property from your own domain. 
 
-1. Enter a value for the new Key, e,g. 234-015-974-6065. 
+1. Enter a value for the new reported property, e,g. ```234-015-974-6065```. 
 
 1. Go back to the main menu and [Read Device Twin Properties](#read-device-twin-properties) again - you should see the value you just entered in the Device Reported Properties. 
 
@@ -302,7 +302,7 @@ We're going to send a message to the Device from the Backend Service.
 
     ![select cloud to device](content/CloudToDeviceStep1.png)
 
-1. Add a message body in the text box in JSON format e.g.
+1. Add a message body in the text box e.g.
 
 ```json
 { "SendInterval": 10 }
@@ -347,6 +347,8 @@ We're going to invoke a method on the connected Device directly from the Azure p
     1. The Result text box in the Azure Portal Direct Method blade (hightlighted in red above ^) should contain a result confirmation message from the Device
 
 1. Repeat the above steps but this time add a JSON payload as a "Payload" parameter (make sure it's valid JSON or the Device Simulator app will wig out) and you should see the payload appear in the Device Simulator. 
+
+[END OF LAB 1]
 
 
 
