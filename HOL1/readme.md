@@ -55,10 +55,10 @@ We're going to create a resource group that allows us to logically group related
 
 1. Select "Resource Groups" from the menu on the left
 
-    ![create resource group](content/addnewresourcegroup.png)
+    ![create resource group](content/AddNewResourceGroup.png)
 1. Click the Add button
    
-   ![configure resource group](content/resourcegroupname.png)
+   ![configure resource group](content/ResourceGroupName.png)
 1. Name the Resource Group `censis-workshop`
 
 1. Click the Create button to Create your new Resource Group
