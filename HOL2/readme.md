@@ -19,7 +19,11 @@
       1. [Amend The Query to Include Aggregated Data](#amend-the-query-for-aggregated-data-output)
       1. [View & Query the Aggregated Data](#view-and-query-aggregated-data)
    1. [Using Stream Analytics to Raise Events](#using-stream-analytics-to-raise-events)
-   1. [Processing Events With Azure Functions](#processing-events-with-azure-functions)
+      1. [Create an Azure Function](#create-an-azure-function)
+      1. [Add The Azure Function Output to the Streaming Job](#add-the-azure-function-output-to-the-streaming-job)
+      1. [Update the Query to Raise Events](#update-the-query-to-raise-events)
+      1. [Test Event Processing](#test-event-processing)
+   1. [Cleaning Up](#cleaning-up)
 
 ## Objectives and Requirements
 
@@ -223,11 +227,197 @@ Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
 
    ![applyfilter](content/applyfilter.png)
 1. Spend some time playing with the query. All properties are indexed by default, so queries should always be optimised
+1. When you are finished, click the cross in the `Azure Cosmos DB Account` blade to return to the resource group blade
 
 ### Using Stream Analytics to Raise Events
 
-# TODO
+The message payload that is being sent to the Azure IoT Hub contains a digital (on/off. true/false) value. We will use this to raise events from Stream Analytics to alert on a change of state on the monitored equipment. Events will then be processed by an Azure Function.
 
-### Processing Events With Azure Functions
+#### Create an Azure Function
 
-#TODO
+1. In the `censis-workshop` Resource Group blade, select add in the top left
+
+   ![add](content/add.png)
+1. In the search box type "function app" and select the suggestion (Function App)
+
+   ![searchfuncapp](content\searchfuncapp.png)
+1. Select `Function App` and click `Create`
+
+   ![createfuncapp](content/createfuncapp.png)
+1. In the `Function App Create` Blade, enter the values as follows. The App name must be globally unique across all Azure App Services (you can use the same value used for the IoT Hub Name). For the storage option, use the same storage account you created in the previous lab and ensure `Application Insights` is on with `North Europe` selected as the location. Click `Create` when ready
+
+   ![funcappset](content/funcappset.png)
+1. Close the `Function App` and `Everything` blades to return to the resource group blade
+1. When the deployment succeeds, click `Go to resource` on the notification
+
+   ![gotofunc](content/gotofunc.png)
+1. You should now see the Azure Functions UI, click the `+` button next to `Functions`
+
+   ![funcui](content/funcui.png)
+1. Ensure `Webhook + API` and `CSharp` are selected and click `Create this function`
+
+   ![createfunc](content/createfunc.png)
+1. You should then see the Function Editor. Replace all the code with the following (replacing `you@yourdomain.com` with your own email address) and click `Save`:
+
+    ```csharp
+    #r "SendGrid"
+    #r "Newtonsoft.Json"
+
+    using System.Net;
+    using SendGrid.Helpers.Mail;
+    using Newtonsoft.Json;
+
+    public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, IAsyncCollector<Mail> mailOutput, TraceWriter log)
+    {
+        try
+        {
+            var events = await req.Content.ReadAsAsync<StateChangedEvent[]>();
+
+            foreach(var e in events)
+            {
+                var mail = new Mail{
+                        Subject = $"{e.DeviceId} State Changed Event"
+                    };
+                var personalization = new Personalization();
+                personalization.AddTo(new Email("you@yourdomain.com"));
+
+                var content = new Content{
+                    Type = "text/plain",
+                Value = $"A State Changed event was detected for Device ID {e.DeviceId}. The new status is {e.Status}. The change took place at {e.EventTime} and was processed at {e.EventProcessedTime}."
+                };
+                mail.AddPersonalization(personalization);
+                mail.AddContent(content);
+                await mailOutput.AddAsync(mail);
+            }
+        }
+        catch(Exception ex){
+            log.Error("Failed to process events", ex);
+            return req.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+        }
+        return req.CreateResponse(HttpStatusCode.Accepted);
+    }
+
+    internal class StateChangedEvent{
+        [JsonProperty("deviceid")]
+        public string DeviceId {get;set;}
+        [JsonProperty("status")]
+        public string Status {get;set;}
+        [JsonProperty("eventtime")]
+        public string EventTime {get;set;}
+        [JsonProperty("eventprocessedtime")]
+        public string EventProcessedTime {get;set;}
+    }
+    ```
+1. On the right hand side, select `View files`
+
+   ![viewfiles](content/funcviewfiles.png)
+1. Select `function.json` in the file list
+
+   ![funcjson](content/funcjson.png)
+1. Replace the `json` content with the following (replacing `noreply@yourdomain.com` with a value of your choice):
+
+   ```javascript
+   {
+    "disabled": false,
+    "bindings": [
+            {
+                "authLevel": "function",
+                "name": "req",
+                "type": "httpTrigger",
+                "direction": "in"
+            },
+            {
+                "name": "mailOutput",
+                "type": "sendGrid",
+                "direction": "out",
+                "apiKey" : "sgKey",
+                "from": "noreply@yourdomain.com"
+            },
+            {
+                "name": "$return",
+                "type": "http",
+                "direction": "out"
+            }
+        ]
+    }
+   ```
+1. Click `Save`
+1. Navigate to the root of the function app
+
+   ![funcroot](content/funcroot.png)
+1. Select `Application settings`
+
+   ![appsettings](content/appsettings.png)
+1. Under `Application settings` click `Add new setting` with the key `sgKey` and the value supplied via email then click save
+
+   ![addsetting](content/addsetting.png)
+
+#### Add The Azure Function Output to the Streaming Job
+
+1. In the resource list, select the Stream Analytics Job you created earlier in this lab
+1. Under `Job Topology` select `Outputs`
+
+   ![outputs](content/asaoutputs3.png)
+1. In the Outputs Blade, select Add and populate the fields as follows, selecting the function app you just created and `HttpTriggerCSharp1` and click `Create`
+
+   ![funcoutopt](content/funcoutopt.png)
+1. The output will be tested, and should succeed
+
+#### Update the Query to Raise Events
+
+1. Under `Job Topology`, select `Query`
+
+   ![asaquery](content/asaquery.png)
+1. Add the following **after** the two existing queries:
+
+   ```sql
+   SELECT
+       deviceId,
+       CASE WHEN motorActive = 1 THEN 'Running' ELSE 'Stopped' END AS Status,
+       System.Timestamp as EventProcessedTime,
+       EventEnqueuedUtcTime AS EventTime
+   INTO
+       [alerts]
+   FROM
+       [iot-hub] TIMESTAMP BY EventEnqueuedUtcTime
+   WHERE
+       motorActive <> LAG(motorActive, 1) OVER (PARTITION BY deviceId LIMIT DURATION(minute, 10) WHEN motorActive IS NOT NULL) AND
+       LAG(motorActive, 1) OVER (PARTITION BY deviceId LIMIT DURATION(minute, 10) WHEN motorActive IS NOT NULL) IS NOT NULL
+   ```
+1. Click Save then click the cross on the `Query` blade to return to the job overview.
+
+   ![qrysv3](content/qrysv3.png)
+1. Click `Start` to start the streaming job as in the previous sections.
+
+#### Test Event Processing
+
+1. Return to the device simulator and send some events to the IoT Hub
+1. Close the Device Simulator App and find the following method in `Program.cs`:
+
+   ```csharp
+    private static string ConstructDataSample(int count)
+    {
+        var rnd = new Random();
+        double temperature;
+        double humidity;
+        temperature = rnd.Next(20, 35);
+        humidity = rnd.Next(60, 80);
+        var dataBuffer = $"{{\"deviceId\":\"{deviceId}\",\"messageId\":{count},\"temperature\":{temperature},\"humidity\":{humidity}, \"motorActive\":true}}";
+        return dataBuffer;
+    }
+   ```
+1. Change `\"motorActive\":true` to `\"motorActive\":false`
+1. Start the device simulator again and send some more events.
+1. You should then receive an email with an alert about the change in state.
+
+### Cleaning Up
+
+The final part of the workshop is to clean up all the resources you created. While resources are running, you are incurring cost. Some resources cannot be stopped, so deleting them is the only way to stop paying for them. You can, if you wish, leave the resources in place if you want to come back to the workshop at a later date. If you want to delete the resources you created, follow these steps:
+
+1. Close the Stream Analytics Job overview blade (if you still have it open) to return to the `censis-workshop` blade
+1. Click `Delete resource group`
+
+   ![delrg](content/delrg.png)
+1. You will be prompted to enter the name of the resource group before confirming. Enter `censis-workshop` and click `Delete`
+
+   ![confdelrg](content/confdelrg.png)
