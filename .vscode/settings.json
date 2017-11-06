@@ -1,19 +1,30 @@
 {
     "cSpell.words": [
+        "addcol",
+        "addcolopt",
         "addinput",
         "addoutput",
+        "addoutputcdb",
+        "aggqquery",
+        "aggquery",
+        "aggquerysave",
         "asainputs",
         "asaoutputs",
         "asaquery",
+        "avhumidity",
+        "avtemp",
         "censis",
         "cosmosdb",
         "createasas",
         "createcdb",
         "createinput",
         "createoutput",
+        "createoutputcdb",
         "createstor",
+        "endofwindow",
         "gotoasa",
         "gotoasajob",
+        "gotocdb",
         "newasa",
         "newcdb",
         "newstor",
@@ -22,7 +33,9 @@
         "searchcdb",
         "selectresourcegroup",
         "startasa",
+        "stopasa",
         "storcreate",
-        "storsearch"
+        "storsearch",
+        "tumblingwindow"
     ]
 }

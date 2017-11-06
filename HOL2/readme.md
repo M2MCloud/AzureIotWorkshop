@@ -123,12 +123,12 @@ The first output will be for an archive of raw data received from the device.
    ![qryblade](content/qryblade.PNG)
 1. Replace the Query Text with the following and click `Save` confirming the changes when prompted:
    ```sql
-   SELECT
-       *
-   INTO
-       [archive]
-   FROM
-       [iot-hub]
+    SELECT
+        *
+    INTO
+        [archive]
+    FROM
+        [iot-hub] TIMESTAMP BY EventEnqueuedUtcTime
    ```
 1. Click the cross in the query blade to go back to the streaming job overview
 1. Click `Start` in the Stream Analytics Job overview blade
@@ -155,7 +155,56 @@ Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
 1. In the `New Account` Blade, enter the values as follows. The `ID` must be globally unique across all Cosmos DB Accounts (you can use the same value used for the IoT Hub Name) and ensure `SQL (document)` is selected as the API
 
    ![newcdb](content/newcdb.png)
+1. When the deployment completes, click `Go To Resource` in the notification
+
+   ![gotocdb](content/gotocdb.png)
+1. In the Azure Cosmos DB Account, select `Add Collection`
+
+   ![addcol](content/addcol.png)
+1. Set up the collection as follows and click `OK`:
+
+   ![addcolopt](content/addcolopt.png)
+1. Click the cross on the `Azure Cosmos DB Account` Blade to return to the Resource Group Blade
 
 ### Add The Aggregated Data Output
 
+1. Go back to your Stream Analytics Job
+1. If the job is `Running`, click `Stop` and wait until the job stops
+
+   ![stopasa](content/stopasa.png)
+1. Under `Job Topology` select `Outputs`
+
+   ![outputs](content/asaoutputs.png)
+1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`, selecting the Cosmos DB
+
+   ![addoutputcdb](content/addoutputcdb.png)
+
 ### Amend The Query For Aggregated Data Output
+
+1. Under `Job Topology`, select `Query`
+
+   ![aggquery](content/aggquery.png)
+1. Add the following query __after__ the existing query:
+   ```sql
+   SELECT
+        AVG(temperature) AS avtemp,
+        AVG(humidity) AS avhumidity,
+        System.Timestamp AS endofwindow,
+        deviceId
+    INTO
+        aggregated
+    FROM
+        [iot-hub] TIMESTAMP BY EventEnqueuedUtcTime
+    GROUP BY deviceId, TUMBLINGWINDOW(s, 30)
+   ```
+   >**Note: If you modified the message payload, swap temperature and humidity for the scalar numeric values your are sending instead.**
+1. Click `Save` and click `Yes` when prompted
+
+   ![aggquerysave](content/aggquerysave.png)
+1. Click the cross in the query blade to go back to the streaming job overview
+1. Click `Start` in the Stream Analytics Job overview blade
+1. Select `Now` when prompted then click `Start`
+
+   ![startasa](content/startasa.png)
+1. Close the Stream Analytics job blade to return to the Resource Group blade
+1. Start the device simulator and send some messages to the IoT Hub
