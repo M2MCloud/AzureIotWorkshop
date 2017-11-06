@@ -64,7 +64,7 @@ We're going to create a resource group that allows us to logically group related
 1. Click the Create button to Create your new Resource Group
 
     ![go to resource group](content/GoToResourceGroup.png)
-1. Navigate to your newly created Resoure Group. You can also navigate to the your newly created Resource Group by clicking on "Resource Groups" in the main navigation menu on the left. 
+1. Navigate to your newly created Resource Group, "censis-workshop" by clicking on the "Go to resource group button". You can also navigate to the your new Resource Group by clicking on "Resource Groups" in the main navigation menu on the left. 
 
 ### Create a General Purpose Storage Account
 
@@ -72,7 +72,7 @@ We need to create a storage account which will be used to store blob and table d
 
 1. In the `censis-workshop` Resource Group blade, select add in the top left
 
-   ![add](content/add.png)
+   ![add](content/add.PNG)
 1. In the search box type "Storage Account" and select `Storage Account - blob, file, table, queue`
 
    ![search](content/storsearch.png)
