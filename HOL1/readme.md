@@ -24,13 +24,13 @@
 ### Objectives
 1. Create Azure Resource Group
 1. Create an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
-1. Use [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) to manage a simulated IoT Asset
-1. Send a Device Message(s) to an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
+1. Use [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) to manage a simulated IoT Device
+1. Send Device Message(s) to an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
 1. Send a large Device Message file to an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
-1. Read and Write Device Twin Properties
-1. Receive a message from the IoT Hub
-    1. Cloud to Device Message 
-    1. Direct Method Invocation
+1. Read and Write [Device Twin](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins) Properties
+1. Receive a message from the [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
+    1. Cloud to Device Messages
+    1. Direct Method on Device invocation
    
 
 ### Requirements
@@ -96,13 +96,15 @@ We'e going to create an Azure IoT Hub that will allow us to manage and communiat
 1. Navigate to your Resource Group, "censis-workshop" if you have not done so already.
     
 1. Click the Add button to add a new resource to your Resource Group
+
     ![add new resource to  resource group](content/AddResourceToResourceGroup.png)
 
 1. In the search box type `iot hub` and select the IoT Hub resource that appears in the results list then click, "Create"
-    ![select iot hub resource](content/TypeThenSelectIoTHub.png)
 
+    ![select iot hub resource](content/TypeThenSelectIoTHub.png)
     
-1. Give you iot hub a unique name, e.g. `censis-workshop-somethingunique`
+1. Give you iot hub a globablly unique name, e.g. `censis-workshop-somethingunique`
+
     ![configure iot hub](content/IoTHubNameThenCreate.png)
 
 1. Click "Pricing and scale tier and select the "Free" pricing tier
@@ -119,15 +121,18 @@ We'e going to create an Azure IoT Hub that will allow us to manage and communiat
 
 ### Use Azure IoT Hub to manage a IoT Asset
 
-We need to register a Device with the newly created IoT Hub so the hub can authorise the connect and send requests from and to the Device. 
+We need to register a Device with the newly created IoT Hub to authorise Device connect and message requests. 
 
 1. Navigate to the newly create IoT Hub ("Resource Groups -> "censis-workshop" -> "name of your iot hub")
     
 1. Click on "Device Explorer on the left hand side menu
+
 1. Click on "Add Device" 
+
     ![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
 
 1. Give the Device a unique identifier that will allow the IoT Hub to identifiy this Device. Copy the Device unique identifier and paste the string value into Notepad - we'll use this value in a moment. 
+
 1. Click on "Save" to create the Device
 
     ![add a new device](content/DeviceExplorerAddDevice.png)
@@ -158,34 +163,55 @@ We need to register a Device with the newly created IoT Hub so the hub can autho
 ### Send Device Messages to the IoT Hub
 Now we're going to send some Device Messages to the IoT Hub.
 
-1. Download and unzip the [AzureIotWorkshop code repository](https://github.com/M2MCloud/AzureIotWorkshop) 
+1. Clone or download and unzip the [AzureIotWorkshop code repository](https://github.com/M2MCloud/AzureIotWorkshop) 
 
 1. Open Visual Studio 2017 and open the soluation `"HOL1\M2MCloud.Workshops.Azure.IoT.sln"`
 
-1. Find the line below the comment `//attendee to change #1` and set the `DeviceConnectionString` value to the Device Connection String we previously pasted into Notepad.
+1. Find the line below the comment 
+    
+```cs
+//attendee to change #1
+```
 
-1. Find the line below the comment `//attendee to change #2` and set the `deviceId` value to the Device unique identfifier we previously pasted into Notepad. The `DeviceId` string value you will see in the `DeviceConnectionString` value should match the `deviceId` value you have just set. 
+and set the `DeviceConnectionString` value to the Device Connection String we previously pasted into Notepad.
 
-1. Find the line below the comment `//attendee to change #3 (optional)`. The JSON string value in this line represents the Device message payload that will be sent to the IoT Hub. If you want, you can add / replace keys to this this JSON message so that it contains key values that represent assets in your own domain. 
+1. Find the line below the comment 
 
-For this workhop, it's worth keeping the JSON structure relatively simple - try using a JSON number value and a JSON boolean value to represent a sensor sample from your own domain, e.g.
+```cs
+//attendee to change #2
+``` 
 
-`{
+and set the `deviceId` value to the Device unique identfifier we previously pasted into Notepad. The `DeviceId` string value you will see in the `DeviceConnectionString` value should match the `deviceId` value you have just set. 
+
+1. Optional - Find the line below the comment 
+
+```cs 
+//attendee to change #3 (optional)
+``` 
+
+The JSON string value in this line represents the Device message payload that will be sent to the IoT Hub. If you want, you can add / replace keys to this this JSON message so that it contains key values that represent assets in your own domain. 
+
+For the purposes of this workshop, it's definately worth keeping the JSON structure relatively simple - try using a JSON number value and a JSON boolean value to represent a sensor sample from your own domain, e.g.
+
+```json
+{
 	"deviceId":"000356865805524",
 	"messageId":0,
 	"speed":30.5,
 	"ignition":true, 
-}`
+}
+```
 
 or
 
-`{
+```json
+{
 	"deviceId":"000356865805524",
 	"messageId":0,
 	"coffeeVolumeRemaining":1.8,
 	"panicWarning":true, 
-}`
-
+}
+```
 
 Change the random number generation as required. 
 
@@ -205,7 +231,7 @@ Change the random number generation as required.
 
 We're going to send a large Device message file to the IoT Hub. 
 
-1. If it's not already, run the Device simulator (Debug->Start without Debugging or Cntrl + F5 )
+1. If it's not already, run the Device simulator (Debug -> Start without Debugging, or Cntrl + F5 )
 
 1. Choose option "2" from the Device menu, "Send large Device Message file"
 
@@ -259,7 +285,9 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 
     ![query explorer](content/QueryExplorerSetup.png)
 
-`SELECT * FROM devices WHERE properties.reported.CellId = '234-015-974-6065'`
+```sql
+SELECT * FROM devices WHERE properties.reported.CellId = '234-015-974-6065'
+```
 
 1. Execute the query - you should be able to see your Device in the results set. 
 
@@ -276,7 +304,9 @@ We're going to send a message to the Device from the Backend Service.
 
 1. Add a message body in the text box in JSON format e.g.
 
-`{ "SendInterval": 10 }`
+```json
+{ "SendInterval": 10 }
+```
 
 and click the "Send Message" button
 
@@ -305,16 +335,18 @@ We're going to invoke a method on the connected Device directly from the Azure p
 1. Jump into the IoT Hub in the Azure portal and navigate to your Device detail using the Device explorer
     
 1. Click on the Direct Method button
+
 ![select direct method](content/DirectMethodSetup1.png)
 
 1. Type in "stop" or "start" into the "method name" text box
+
 ![select direct method](content/DirectMethodSetup2.png)
 
-1. Click "Invoke" method. Two things should happen:
+1. Click "Invoke Method" button. Two things should happen:
     1. The Device Simulator console app should display a stop or start message
     1. The Result text box in the Azure Portal Direct Method blade (hightlighted in red above ^) should contain a result confirmation message from the Device
 
-1. Repeat the above steps but this time add a JSON payload as a "Payload" parameter (make sure it's valid JSON or the Device Simulator app will wig out!) and you should see the payload appear in the Device Simulator. 
+1. Repeat the above steps but this time add a JSON payload as a "Payload" parameter (make sure it's valid JSON or the Device Simulator app will wig out) and you should see the payload appear in the Device Simulator. 
 
 
 
