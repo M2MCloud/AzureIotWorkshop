@@ -7,14 +7,19 @@
     1. [Requirements](#requirements)
 1. [Instructions](#instructions)
    1. [Prerequisites](#prerequisites)
-   1. [Create a Storage Account](#create-a-general-purpose-storage-account)
-   1. [Create a Stream Analytics Job](#create-an-azure-stream-analytics-job)
-   1. [Create The Job Input](#create-the-job-input)
-   1. [Add The Archive Output](#add-the-archive-output)
-   1. [Add A Query](#add-a-query)
-   1. [Create a CosmosDB Account](#create-a-cosmosdb-account)
-   1. [Add The Aggregated Data Output](#add-the-aggregated-data-output)
-   1. [Amend The Query to Include Aggregated Data](#amend-the-query-for-aggregated-data-output)
+   1. [Using Stream Analytics to Store Aggregated Data](#using-stream-analytics-to-store-aggregated-data)
+      1. [Create a Stream Analytics Job](#create-an-azure-stream-analytics-job)
+      1. [Create The Job Input](#create-the-job-input)
+      1. [Add The Archive Output](#add-the-archive-output)
+      1. [Add A Query](#add-a-query)
+      1. [View the Archived Data](#view-the-archived-data)
+   1. [Using Stream Analytics to Store Aggregated Data](#using-stream-analytics-to-store-aggregated-data)
+      1. [Create a CosmosDB Account](#create-a-cosmosdb-account)
+      1. [Add The Aggregated Data Output](#add-the-aggregated-data-output)
+      1. [Amend The Query to Include Aggregated Data](#amend-the-query-for-aggregated-data-output)
+      1. [View & Query the Aggregated Data](#view-and-query-aggregated-data)
+   1. [Using Stream Analytics to Raise Events](#using-stream-analytics-to-raise-events)
+   1. [Processing Events With Azure Functions](#processing-events-with-azure-functions)
 
 ## Objectives and Requirements
 
@@ -46,26 +51,9 @@ Activities in this lab take place within the Azure Portal using the resource gro
    ![select resource group](content/selectresourcegroup.png)
 1. Select the `censis-workshop` resource group you created in the previous Hands On Lab
 
-### Create a General Purpose Storage Account
+### Using Stream Analytics to Archive Data
 
-We need to create a storage account which will be used to store blob and table data.
-
-1. In the `censis-workshop` Resource Group blade, select add in the top left
-
-   ![add](content/add.png)
-1. In the search box type "Storage Account" and select `Storage Account - blob, file, table, queue`
-
-   ![search](content/storsearch.png)
-1. Select `Storage Account - blob, file, table, queue` from the results and click `Create`
-
-   ![createstor](content/storcreate.png)
-1. In the `Create Storage Account` Blade, give your storage account a name. The name must be globally unique, 24 characters or fewer and contain only alpha-numeric characters. Configure the storage account settings as follows and click `Create`:
-
-   ![newstor](content/newstor.png)
-
-We won't be using the storage account until later. When the deployment succeeds, you don't need to go to the resource immediately. You can move straight on to the next section
-
-### Create an Azure Stream Analytics Job
+#### Create an Azure Stream Analytics Job
 
 We will create an Azure Stream Analytics Job which will be used to perform aggregations on the data as well as storing data in an archive.
 
@@ -88,7 +76,7 @@ We will create an Azure Stream Analytics Job which will be used to perform aggre
 You should now see the following:
 ![created](content/created.png)
 
-### Create The Job Input
+#### Create The Job Input
 
 The streaming job will take input from the IoT Hub created in the previous lab.
 
@@ -100,20 +88,20 @@ The streaming job will take input from the IoT Hub created in the previous lab.
    ![addinput](content/createinput.png)
 1. Click the cross in the input blade to go back to the streaming job overview
 
-### Add The Archive output
+#### Add The Archive output
 
 The first output will be for an archive of raw data received from the device.
 
 1. Under `Job Topology` select `Outputs`
 
    ![outputs](content/asaoutputs.png)
-1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`, selecting the storage account you created earlier as the `Storage account` option
+1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`, selecting the storage account you created in the previous Hands On Lab as the `Storage account` option
 
    ![addoutput](content/createoutput.png)
    1. For copy-paste convenience, the Partition Key is `deviceId` and the Row Key is `EventEnqueuedUtcTime`
 1. Click the cross in the output blade to go back to the streaming job overview
 
-### Add A Query
+#### Add A Query
 
 1. Under `Job Topology` select `Query`
 
@@ -136,16 +124,21 @@ The first output will be for an archive of raw data received from the device.
 
    ![startasa](content/startasa.png)
 1. Start the device simulator and send some messages to the IoT Hub
-1. Open Azure Storage Explorer and connect to your subscription ([see the Microsoft Documentation for instructions](https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer))
-1. Find the Storage Account you created earlier, expand the tables node, find the `archive` table and double click to open and view the archived data
 
-### Create a CosmosDB Account
+#### View the Archived Data
+
+1. Open Azure Storage Explorer and connect to your subscription ([see the Microsoft Documentation for instructions](https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer))
+1. Find the Storage Account you created in the previous Hands On Lab, expand the tables node, find the `archive` table and double click to open and view the archived data
+
+### Using Stream Analytics to Store Aggregated Data
+
+#### Create a CosmosDB Account
 
 Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
 
 1. In the `censis-workshop` Resource Group blade, select add in the top left
 
-   ![add](content/add.png)
+   ![add](content/add.PNG)
 1. In the search box type "Cosmos DB" and select the suggestion
 
    ![searchcdb](content/searchcdb.png)
@@ -164,9 +157,10 @@ Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
 1. Set up the collection as follows and click `OK`:
 
    ![addcolopt](content/addcolopt.png)
+   > **NOTE**: The partition key value **must** be all lower case.
 1. Click the cross on the `Azure Cosmos DB Account` Blade to return to the Resource Group Blade
 
-### Add The Aggregated Data Output
+#### Add The Aggregated Data Output
 
 1. Go back to your Stream Analytics Job
 1. If the job is `Running`, click `Stop` and wait until the job stops
@@ -178,8 +172,9 @@ Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
 1. In the Outputs Blade, select Add and populate the fields as follows and click `Create`, selecting the Cosmos DB
 
    ![addoutputcdb](content/addoutputcdb.png)
+   > **NOTE** The highlighted values must match the value `aggregated` exactly.
 
-### Amend The Query For Aggregated Data Output
+#### Amend The Query For Aggregated Data Output
 
 1. Under `Job Topology`, select `Query`
 
@@ -208,3 +203,31 @@ Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
    ![startasa](content/startasa.png)
 1. Close the Stream Analytics job blade to return to the Resource Group blade
 1. Start the device simulator and send some messages to the IoT Hub
+
+#### View and Query Aggregated Data
+
+1. In the list of resources, select the Cosmos DB account you created earlier
+1. In the `Collections` list, select the `aggregated` collection
+
+   ![selectaggcol](content/selectaggcol.png)
+1. You should see a UI that looks like this:
+
+    ![collectionui](content/collectionui.png)
+1. Select one of the documents in the list to see the output generated from the streaming job
+1. Click the `Edit Filter` button to add a condition to the query filter and enter the following in the field:
+    ```sql
+    where c.avtemp < 27
+    ```
+    > **NOTE** You may need to modify the value to see results, depending upon the values sent from your simulator. If you modified the payload and the Stream Analytics Query accordingly, use the property name from your query instead of `avtemp`.
+1. Click `Apply Filter` and you will see the list of documents filtered to those matching the query very quickly
+
+   ![applyfilter](content/applyfilter.png)
+1. Spend some time playing with the query. All properties are indexed by default, so queries should always be optimised
+
+### Using Stream Analytics to Raise Events
+
+# TODO
+
+### Processing Events With Azure Functions
+
+#TODO

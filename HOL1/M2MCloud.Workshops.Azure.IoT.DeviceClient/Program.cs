@@ -13,9 +13,9 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
     class Program
     {
         //attendee to change
-        private const string DeviceConnectionString = "HostName=censis-workshop-lab101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=WB94k41+2OSW7uUbOrJHveL13nXCKpVqiG63syzDz8M=";
+        private const string DeviceConnectionString = "HostName=censis-workshop-lumsden.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=Q3vunwtIuiIzYJc05KxnGqBqRCXET8hT4Aj7gbxtBI0=";
         //attendee to change
-        private const string IoTHubStorageAccountName = "fileupload";
+        private const string IoTHubStorageAccountName = "censisworkshop";
 
 
         private static String deviceId = "956584572537578";
@@ -143,6 +143,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                 var eventMessage = new Message(Encoding.UTF8.GetBytes(dataBuffer));
                 Console.WriteLine($"\n> Sending message: {count}, Data: [{dataBuffer}]");
                 await deviceClient.SendEventAsync(eventMessage);
+                await Task.Delay(1000);
             }
             Console.WriteLine(pressAnyKeyToReturnToTheMainMenu);
             Console.ReadKey();
