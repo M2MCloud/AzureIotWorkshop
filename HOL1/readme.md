@@ -54,16 +54,19 @@ We're going to create a resource group that allows us to logically group related
 1. Navigate to the [Azure Portal](https://portal.azure.com)
 
 1. Select "Resource Groups" from the menu on the left
+    
+1. Click the Add button  
 
     ![create resource group](content/AddNewResourceGroup.png)
-1. Click the Add button
    
-   ![configure resource group](content/ResourceGroupName.png)
 1. Name the Resource Group `censis-workshop`
+
+    ![configure resource group](content/ResourceGroupName.png)
 
 1. Click the Create button to Create your new Resource Group
 
     ![go to resource group](content/GoToResourceGroup.png)
+
 1. Navigate to your newly created Resource Group, "censis-workshop" by clicking on the "Go to resource group button". You can also navigate to the your new Resource Group by clicking on "Resource Groups" in the main navigation menu on the left. 
 
 ### Create a General Purpose Storage Account
@@ -90,59 +93,65 @@ We won't be using the storage account until later. When the deployment succeeds,
 
 We'e going to create an Azure IoT Hub that will allow us to manage and communiate with a simulated IoT Device. 
 
-1. Navigate to your Resource Group, "censis-workship" if you have not done so already.
-
-    ![add new resource to  resource group](content/AddResourceToResourceGroup.png)
+1. Navigate to your Resource Group, "censis-workshop" if you have not done so already.
+    
 1. Click the Add button to add a new resource to your Resource Group
+    ![add new resource to  resource group](content/AddResourceToResourceGroup.png)
 
+1. In the search box type `iot hub` and select the IoT Hub resource that appears in the results list then click, "Create"
     ![select iot hub resource](content/TypeThenSelectIoTHub.png)
-1. In the search box type `iot hub` and select the IoT Hub resource that appears in the results list
 
-    ![configure iot hub](content/IoTHubNameThenCreate.png)
+    
 1. Give you iot hub a unique name, e.g. `censis-workshop-somethingunique`
+    ![configure iot hub](content/IoTHubNameThenCreate.png)
 
 1. Click "Pricing and scale tier and select the "Free" pricing tier
 
-1. Wait!  ^ Make sure you have selected "Pricing and scale tier" is on the "Free" tier ^ : ) 
+1. Double check... Make sure you have selected "Pricing and scale tier" is on the "Free" tier : ) 
 
-1. In "Resource Group" use the newly created, existing `censis-workshop` resource group
+1. In "Resource Group" select "Use existing" and select the existing `censis-workshop` resource group
 
 1. In "Location" select "UK West"
 
 1. Click the "Create" button to create a new IoT Hub
 
-1. Navigate to the the newly created IoT Hub either by clicking on the notification that appears (or by using the "Search resources, services and docs" text box at the very top of the page)
+1. Navigate to the the newly created IoT Hub either by clicking on the notification that appears (or by using the "Search resources, services and docs" text box at the very top of the page and typing in the name of your IoT Hub)
 
 ### Use Azure IoT Hub to manage a IoT Asset
 
-We need to register a Device with the newly created IoT Hub so the hub can authorise the connect and send requests from the Device. 
+We need to register a Device with the newly created IoT Hub so the hub can authorise the connect and send requests from and to the Device. 
 
 1. Navigate to the newly create IoT Hub ("Resource Groups -> "censis-workshop" -> "name of your iot hub")
-
-    ![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
+    
 1. Click on "Device Explorer on the left hand side menu
-
 1. Click on "Add Device" 
+    ![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
 
-    ![add a new device](content/DeviceExplorerAddDevice.png)
 1. Give the Device a unique identifier that will allow the IoT Hub to identifiy this Device. Copy the Device unique identifier and paste the string value into Notepad - we'll use this value in a moment. 
-
 1. Click on "Save" to create the Device
 
-    ![select the new device](content/DeviceExplorerClickOnDevice.png)
+    ![add a new device](content/DeviceExplorerAddDevice.png)
+   
 1. Select the newly created Device by clicking on the Device in the Device Explorer list and view it's Device Details. 
 
-    ![select the new device](content/DeviceExplorerDeviceDetails.png)
+    ![select the new device](content/DeviceExplorerClickOnDevice.png)
+
+    
 1. Copy the Device specific Connection String and paste the string into Notepad or another text editor - we'll use this value in a moment.
 
-    ![associate storage account container with the iot hub](content/DeviceExplorerFileUpload.png)
-1. Associate a storage account container with IoT Hub by clicking on "File Upload" on the left hand side menu
+    ![copy device details](content/DeviceExplorerDeviceDetails.png)
 
-    ![create storage account container with the iot hub](content/DeviceExplorerFileUploadContainer.png)
+1. Associate a storage account container with IoT Hub by clicking on "File Upload" on the left hand side menu
+    
+    ![associate storage account container with the iot hub](content/DeviceExplorerFileUpload.png)
+    
 1. Select the previously created Storage Account, "censisworkshop" and create a new container within that Storage Account named "fileupload".
+    
+    ![create storage account container with the iot hub](content/DeviceExplorerFileUploadContainer.png)
+    
+1. Select the newly created container and click "Save"
 
     ![save storage account container against the iot hub](content/DeviceExplorerFileUploadSave.png)
-1. Select the newly created container and click "Save"
 
 1. We're now ready to start messing around with the IoT Hub. 
 
@@ -187,9 +196,10 @@ Change the random number generation as required.
 1. Choose a number of messages to send to the Hub...and send!
 
 1. You should see the JSON messages that have been sent appear in the console app output. 
-
-    ![device usage dashboard](content/DeviceDetailsUsageDashboard.png)
+    
 1. If you jump back into the Azure portal you and refresh the Device Details blade, you should see your IoT Usage values change - this sometimes takes a few moments to update!
+
+![device usage dashboard](content/DeviceDetailsUsageDashboard.png)
 
 ### Send a large Device Message file to the IoT Hub
 
@@ -206,15 +216,17 @@ Let's have a look at the file the Device just uploaded:
 1. Jump back into the Azure Portal into the `censis-workshop` Resource Group. 
 
 1. Choose the storage account you created earlier in the lab. 
+    
+1. Navigate to the `fileupload` container
 
     ![file upload container](content/FileUploadContainerSelection.png)
+
 1. Navigate to the `fileupload` container
 
     ![blob item](content/FileUploadContainerSelection.png)
-1. Navigate to the `fileupload` container
-
-    ![blob item](content/FileUploadBlobDetails.png)
+    
 1. Navigate to the blob and you will see the file that was just uploaded.
+    ![blob item](content/FileUploadBlobDetails.png)
 
 ### Read Device Twin Properties
 We're going to have a look at the desired and report Device Twin properties to demonstrate how they can be used to configure a Device.
@@ -243,12 +255,13 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 1. Select the Query Explorer menu item on the left hand side. 
 
     ![query explorer](content/QueryExplorerSetup.png)
-1. Paste in the following query to the Query Explorer, amended if you have modified the Key name in the above steps:
+1. Paste in the following query to the Query Explorer, amended if you have modified the Key / Value values in the above steps:
+
+    ![query explorer](content/QueryExplorerSetup.png)
 
 `SELECT * FROM devices WHERE properties.reported.CellId = '234-015-974-6065'`
 
 1. Execute the query - you should be able to see your Device in the results set. 
-
 
 ### Receive Cloud to Device Message
 We're going to send a message to the Device from the Backend Service. 
@@ -256,16 +269,18 @@ We're going to send a message to the Device from the Backend Service.
 1. Jump into the IoT Hub in the Azure portal
 
 1. Navigate to the your Device Details using the Device Explorer in the Azure Portal
-
-    ![select cloud to device](content/CloudToDeviceStep1.png)
+    
 1. Click the Message to Device button 
 
-    ![set a cloud message](content/CloudToDeviceStep2.png)
+    ![select cloud to device](content/CloudToDeviceStep1.png)
+
 1. Add a message body in the text box in JSON format e.g.
 
 `{ "SendInterval": 10 }`
 
 and click the "Send Message" button
+
+![set a cloud message](content/CloudToDeviceStep2.png)
 
 1. Jump back into Visual Studio 
 
@@ -288,12 +303,12 @@ We're going to invoke a method on the connected Device directly from the Azure p
 1. The app is currently listening for a Direct Method invocation, so there is no need to select a menu item. The console app has to be running (i.e. connected) for the next few steps to work. 
 
 1. Jump into the IoT Hub in the Azure portal and navigate to your Device detail using the Device explorer
-
-    ![select direct method](content/DirectMethodSetup1.png)
+    
 1. Click on the Direct Method button
+![select direct method](content/DirectMethodSetup1.png)
 
-    ![select direct method](content/DirectMethodSetup2.png)
 1. Type in "stop" or "start" into the "method name" text box
+![select direct method](content/DirectMethodSetup2.png)
 
 1. Click "Invoke" method. Two things should happen:
     1. The Device Simulator console app should display a stop or start message
