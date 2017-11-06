@@ -88,17 +88,17 @@ We won't be using the storage account until later. When the deployment succeeds,
 
 ### Create an Azure IoT Hub
 
-We'e going to create an Azure IoT Hub that will allow us to manage and communiate with a simulated IoT Asset. 
+We'e going to create an Azure IoT Hub that will allow us to manage and communiate with a simulated IoT Device. 
 
-1. Navigate to your Resource Group if you have not done so already.
+1. Navigate to your Resource Group, "censis-workship" if you have not done so already.
 
-![add new resource to  resource group](content/AddResourceToResourceGroup.png)
+    ![add new resource to  resource group](content/AddResourceToResourceGroup.png)
 1. Click the Add button to add a new resource to your Resource Group
 
-![select iot hub resource](content/TypeThenSelectIoTHub.png)
+    ![select iot hub resource](content/TypeThenSelectIoTHub.png)
 1. In the search box type `iot hub` and select the IoT Hub resource that appears in the results list
 
-![configure iot hub](content/IoTHubNameThenCreate.png)
+    ![configure iot hub](content/IoTHubNameThenCreate.png)
 1. Give you iot hub a unique name, e.g. `censis-workshop-somethingunique`
 
 1. Click "Pricing and scale tier and select the "Free" pricing tier
@@ -119,27 +119,29 @@ We need to register a Device with the newly created IoT Hub so the hub can autho
 
 1. Navigate to the newly create IoT Hub ("Resource Groups -> "censis-workshop" -> "name of your iot hub")
 
-![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
+    ![go to the device explorer](content/DeviceExplorerCreateNewDevice.png)
 1. Click on "Device Explorer on the left hand side menu
+
 1. Click on "Add Device" 
 
-![add a new device](content/DeviceExplorerAddDevice.png)
+    ![add a new device](content/DeviceExplorerAddDevice.png)
 1. Give the Device a unique identifier that will allow the IoT Hub to identifiy this Device. Copy the Device unique identifier and paste the string value into Notepad - we'll use this value in a moment. 
+
 1. Click on "Save" to create the Device
 
-![select the new device](content/DeviceExplorerClickOnDevice.png)
+    ![select the new device](content/DeviceExplorerClickOnDevice.png)
 1. Select the newly created Device by clicking on the Device in the Device Explorer list and view it's Device Details. 
 
-![select the new device](content/DeviceExplorerDeviceDetails.png)
+    ![select the new device](content/DeviceExplorerDeviceDetails.png)
 1. Copy the Device specific Connection String and paste the string into Notepad or another text editor - we'll use this value in a moment.
 
-![associate storage account container with the iot hub](content/DeviceExplorerFileUpload.png)
+    ![associate storage account container with the iot hub](content/DeviceExplorerFileUpload.png)
 1. Associate a storage account container with IoT Hub by clicking on "File Upload" on the left hand side menu
 
-![create storage account container with the iot hub](content/DeviceExplorerFileUploadContainer.png)
+    ![create storage account container with the iot hub](content/DeviceExplorerFileUploadContainer.png)
 1. Select the previously created Storage Account, "censisworkshop" and create a new container within that Storage Account named "fileupload".
 
-![save storage account container against the iot hub](content/DeviceExplorerFileUploadSave.png)
+    ![save storage account container against the iot hub](content/DeviceExplorerFileUploadSave.png)
 1. Select the newly created container and click "Save"
 
 1. We're now ready to start messing around with the IoT Hub. 
@@ -186,7 +188,7 @@ Change the random number generation as required.
 
 1. You should see the JSON messages that have been sent appear in the console app output. 
 
-![device usage dashboard](content/DeviceDetailsUsageDashboard.png)
+    ![device usage dashboard](content/DeviceDetailsUsageDashboard.png)
 1. If you jump back into the Azure portal you and refresh the Device Details blade, you should see your IoT Usage values change - this sometimes takes a few moments to update!
 
 ### Send a large Device Message file to the IoT Hub
@@ -205,13 +207,13 @@ Let's have a look at the file the Device just uploaded:
 
 1. Choose the storage account you created earlier in the lab. 
 
-![file upload container](content/FileUploadContainerSelection.png)
+    ![file upload container](content/FileUploadContainerSelection.png)
 1. Navigate to the `fileupload` container
 
-![blob item](content/FileUploadContainerSelection.png)
+    ![blob item](content/FileUploadContainerSelection.png)
 1. Navigate to the `fileupload` container
 
-![blob item](content/FileUploadBlobDetails.png)
+    ![blob item](content/FileUploadBlobDetails.png)
 1. Navigate to the blob and you will see the file that was just uploaded.
 
 ### Read Device Twin Properties
@@ -240,7 +242,7 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 
 1. Select the Query Explorer menu item on the left hand side. 
 
-![query explorer](content/QueryExplorerSetup.png)
+    ![query explorer](content/QueryExplorerSetup.png)
 1. Paste in the following query to the Query Explorer, amended if you have modified the Key name in the above steps:
 
 `SELECT * FROM devices WHERE properties.reported.CellId = '234-015-974-6065'`
@@ -255,10 +257,10 @@ We're going to send a message to the Device from the Backend Service.
 
 1. Navigate to the your Device Details using the Device Explorer in the Azure Portal
 
-![select cloud to device](content/CloudToDeviceStep1.png)
+    ![select cloud to device](content/CloudToDeviceStep1.png)
 1. Click the Message to Device button 
 
-![set a cloud message](content/CloudToDeviceStep2.png)
+    ![set a cloud message](content/CloudToDeviceStep2.png)
 1. Add a message body in the text box in JSON format e.g.
 
 `{ "SendInterval": 10 }`
@@ -287,10 +289,10 @@ We're going to invoke a method on the connected Device directly from the Azure p
 
 1. Jump into the IoT Hub in the Azure portal and navigate to your Device detail using the Device explorer
 
-![select direct method](content/DirectMethodSetup1.png)
+    ![select direct method](content/DirectMethodSetup1.png)
 1. Click on the Direct Method button
 
-![select direct method](content/DirectMethodSetup2.png)
+    ![select direct method](content/DirectMethodSetup2.png)
 1. Type in "stop" or "start" into the "method name" text box
 
 1. Click "Invoke" method. Two things should happen:
