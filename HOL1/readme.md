@@ -25,8 +25,8 @@
 1. Create Azure Resource Group
 1. Create an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
 1. Use [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) to manage a simulated IoT Asset
-1. Send a Device Message(s) to the IoT Hub
-1. Send a massive Device Message to the IoT Hub
+1. Send a Device Message(s) to an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
+1. Send a large Device Message file to an [Azure IoT Hub](https://azure.microsoft.com/en-gb/services/iot-hub/) 
 1. Read and Write Device Twin Properties
 1. Receive a message from the IoT Hub
     1. Cloud to Device Message 
@@ -45,11 +45,11 @@
 
 ### Prerequisites
 
-Activities in this lab take place within the Azure Portal and Visual Studio. 
+Activities in this lab take place within the Azure Portal and Visual Studio 2017. 
 
 ### Create a Resource Group
 
-We're going to create a resource group that allows us to logically group related Azure resources. Once we finished both Hands On Lab 1 (HOL1) *and* Hands On Lab 2 (HOL2) then you can delete the Resource Group which will delete all Azure Resources associated with the Resource Group. 
+We're going to create a resource group that allows us to logically group related Azure resources. Once we finished both Hands On Lab 1 (HOL1) and Hands On Lab 2 (HOL2) then you can delete the Resource Group, which will delete all Azure Resources associated with the Resource Group. 
 
 1. Navigate to the [Azure Portal](https://portal.azure.com)
 
