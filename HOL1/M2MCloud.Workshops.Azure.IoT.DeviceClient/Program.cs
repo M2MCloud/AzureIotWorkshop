@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
@@ -12,16 +13,14 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
 {
     class Program
     {
-        //attendee to change
+        //attendee to change #1
         private const string DeviceConnectionString = "HostName=censis-workshop-lab101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=WB94k41+2OSW7uUbOrJHveL13nXCKpVqiG63syzDz8M=";
-        //attendee to change
-        private const string IoTHubStorageAccountName = "fileupload";
-
-
+        //attendee to change #2
         private static String deviceId = "956584572537578";
+        private const string IoTHubStorageAccountName = "fileupload";
         private static Microsoft.Azure.Devices.Client.DeviceClient deviceClient;
         private static string pressAnyKeyToReturnToTheMainMenu = "\nPress any key to return to the main menu";
-
+        private static ConsoleColor originalConsoleColour;
         static void Main(string[] args)
         {
             while (true)
@@ -29,6 +28,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                 try
                 {
                     InitialiseDevice().Wait();
+                    InitialiseApp();
                     Console.Clear();
                     ShowDeviceMenu().Wait();
                     Console.ReadKey();
@@ -41,6 +41,11 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                     deviceClient?.CloseAsync();
                 }
             }
+        }
+
+        private static void InitialiseApp()
+        {
+            originalConsoleColour = Console.ForegroundColor;
         }
 
         private static async Task InitialiseDevice()
@@ -59,7 +64,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                 Console.WriteLine("*** CENSIS Workshop Device - M2M Model X2711 ***");
                 Console.WriteLine("\nDevice Menu\n");
                 Console.WriteLine("1. Send Device to Cloud Message(s)");
-                Console.WriteLine("2. Send MASSIVE Device Message sample");
+                Console.WriteLine("2. Send large Device Message file");
                 Console.WriteLine("3. Read Device Twin Properties");
                 Console.WriteLine("4. Write Device Twin Reported Properties");
                 Console.WriteLine("5. Receive Cloud to Device Message");
@@ -73,7 +78,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                         await SendEvent();
                         break;
                     case "2":
-                        await UploadDeviceMessages(); 
+                        await UploadDeviceFile(); 
                         break;
                     case "3":
                         await ReadDeviceTwin();
@@ -91,16 +96,21 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
             }
         }
 
-        private static async Task UploadDeviceMessages()
+        private static async Task UploadDeviceFile()
         {
             Console.WriteLine("\nWhat is the full file path of the massive Device Message samples?");
             var path = Console.ReadLine();
             if(path==null)
                 throw new InvalidOperationException("Please input a valid file path");
             path = path.Replace("\"", "");
+            var file = new FileInfo(path);
+
+            if (!file.Exists)
+                throw new InvalidOperationException("Can't find that file. ");
+
             using (var sourceData = new FileStream(path, FileMode.Open))
             {
-                await deviceClient.UploadToBlobAsync(IoTHubStorageAccountName, sourceData);
+                await deviceClient.UploadToBlobAsync(file.Name, sourceData);
             }
         }
 
@@ -117,7 +127,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
 
         static async Task WriteDeviceTwin()
         {
-            Console.WriteLine("\nWhat is Key the Device should update?");
+            Console.WriteLine("\nWhat is the name of the Key for the Device Twin Property?");
             var key = Console.ReadLine();
 
             Console.WriteLine("\nWhat is Value of the Key?");
@@ -158,13 +168,15 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
             double humidity;
             temperature = rnd.Next(20, 35);
             humidity = rnd.Next(60, 80);
+            //attendee to change #3 (optional)
+            //Todo: change the random number generation
             var dataBuffer = $"{{\"deviceId\":\"{deviceId}\",\"messageId\":{count},\"temperature\":{temperature},\"humidity\":{humidity}, \"motorActive\":true}}";
             return dataBuffer;
         }
 
         static async Task ReceiveCommands()
         {
-            Console.WriteLine("\nDevice waiting for commands from IoTHub. Press escape to return to the main menu.\n");
+            Console.WriteLine("\nDevice waiting for commands from IoTHub. Press escape to return to the main menu.");
             Message receivedMessage = null;
 
             while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape))
@@ -174,7 +186,16 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                     receivedMessage = await deviceClient.ReceiveAsync(TimeSpan.FromSeconds(1));
                     if (receivedMessage == null) continue;
                     var messageData = Encoding.ASCII.GetString(receivedMessage.GetBytes());
-                    Console.WriteLine("\t{0}> Received message: {1}", DateTime.Now.ToLocalTime(), messageData);
+                    Console.WriteLine("\n\t{0}> Received message: {1}", DateTime.Now.ToLocalTime(), messageData);
+                    if (receivedMessage.Properties.Any())
+                    {
+                        Console.WriteLine("\tMessage Properties");
+                        foreach (var receivedMessageProperty in receivedMessage.Properties)
+                        {
+                            Console.WriteLine(
+                                $"\t - Key:{receivedMessageProperty.Key} Value: {receivedMessageProperty.Value}");
+                        }
+                    }
                     await deviceClient.CompleteAsync(receivedMessage);
                 }
                 finally
@@ -189,17 +210,22 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
         static Task<MethodResponse> StopThePumpNow(MethodRequest methodRequest, object userContext)
         {
             var reason = methodRequest.DataAsJson == "null" ? "" : $"Reason:{methodRequest.DataAsJson}";
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"\nThe pump has been switched off. {reason}");
             var status = $"{{\"status\":\"Device confirming pump has been switched off at {DateTime.UtcNow}\"}}";
+            Console.ForegroundColor = originalConsoleColour;
             return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(status), 200));
         }
 
         static Task<MethodResponse> StartThePumpNow(MethodRequest methodRequest, object userContext)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             var reason = methodRequest.DataAsJson == "null" ? "" : $"Reason:{methodRequest.DataAsJson}";
             Console.WriteLine($"\nThe pump has been switched on. {reason}");
             var status = $"{{\"status\":\"Device confirming pump has been switched on at {DateTime.UtcNow}\"}}";
+            Console.ForegroundColor = originalConsoleColour;
             return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(status), 200));
         }
+
     }
 }
