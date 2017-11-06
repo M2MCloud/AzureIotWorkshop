@@ -31,9 +31,9 @@
 
 1. Use [Azure Stream Analytics](https://azure.microsoft.com/en-gb/services/stream-analytics/) to process data from Azure IoT Hub
 1. Output processed data from Stream Analytics to:
-   1. [Azure Table Storage](https://azure.microsoft.com/en-gb/services/storage/tables/)
-   1. [Azure CosmosDB](https://azure.microsoft.com/en-gb/services/cosmos-db/)
-   1. Create an [Azure Logic App](https://azure.microsoft.com/en-gb/services/logic-apps/) to send alerts
+   1. [Azure Table Storage](https://azure.microsoft.com/en-gb/services/storage/tables/) to archive data
+   1. [Azure CosmosDB](https://azure.microsoft.com/en-gb/services/cosmos-db/) to store aggregated data
+   1. An [Azure Function](https://azure.microsoft.com/en-gb/services/functions/) to send alerts
 
 ### Requirements
 
@@ -421,3 +421,5 @@ The final part of the workshop is to clean up all the resources you created. Whi
 1. You will be prompted to enter the name of the resource group before confirming. Enter `censis-workshop` and click `Delete`
 
    ![confdelrg](content/confdelrg.png)
+
+[END OF LAB 2]
