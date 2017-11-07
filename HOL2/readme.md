@@ -23,6 +23,7 @@
       1. [Add The Azure Function Output to the Streaming Job](#add-the-azure-function-output-to-the-streaming-job)
       1. [Update the Query to Raise Events](#update-the-query-to-raise-events)
       1. [Test Event Processing](#test-event-processing)
+   1. [If You Have Time](#if-you-have-time)
    1. [Cleaning Up](#cleaning-up)
 
 ## Objectives and Requirements
@@ -138,7 +139,7 @@ The first output will be for an archive of raw data received from the device.
 
 #### Create a CosmosDB Account
 
-Aggregated data will be stored in Azure CosmosDB using the DocumentDB API.
+We will use a Stream Analytics Job to output documents containing aggregated data grouped by device and 30 second tumbling windows to Cosmos DB
 
 1. In the `censis-workshop` Resource Group blade, select add in the top left
 
@@ -348,7 +349,8 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
 1. Select `Application settings`
 
    ![appsettings](content/appsettings.png)
-1. Under `Application settings` click `Add new setting` with the key `sgKey` and the value supplied via email then click save
+1. Under `Application settings` click `Add new setting` with the key `sgKey` and the in the value, enter the API Key supplied via email then click save
+1. Click the cross in the `Function App` blade to return to the resource group
 
    ![addsetting](content/addsetting.png)
 
@@ -410,8 +412,15 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
     }
    ```
 1. Change `\"motorActive\":true` to `\"motorActive\":false`
-1. Start the device simulator again and send some more events.
-1. You should then receive an email with an alert about the change in state.
+1. Start the device simulator again and send some more events
+1. You should then receive an email with an alert about the change in state
+
+### If You Have Time
+
+1. Try experimenting with the Aggregate Query in the Stream Analytics Job. Remember to stop the Job before modifying the query. Try functions other than `AVG`. Full documentation of the full set of Aggregate Functions can be found in the [documentation](https://msdn.microsoft.com/en-us/library/azure/dn931787.aspx). The full documentation for Stream Analytics can be found on [MSDN](https://msdn.microsoft.com/library/azure/dn834998)
+1. Try changing the condition where a status change event will be raised by Stream Analytics to require the state to have changed in 2 messages before raising the event. Documentation about the `LAG` function can be found [here](https://msdn.microsoft.com/en-us/library/azure/dn966240.aspx)
+1. Try changing the code in the Azure Function to send to more recipients or update the content of the email body
+1. Update the Azure Function to also output the event to [Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-documentdb), [Table Storage](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-table), [Blob Storage](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob) or a [Storage Queue](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue). The full documentation on [Azure Functions Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings) is excellent
 
 ### Cleaning Up
 
