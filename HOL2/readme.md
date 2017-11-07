@@ -40,6 +40,7 @@
 
 1. Microsoft Visual Studio Community, Professional or Enterprise 2017 (Windows 10)
 1. Access to an Azure Subscription with Administrator permissions
+1. Azure Storage Explorer which can be [installed from here](https://azure.microsoft.com/en-us/features/storage-explorer/)
 1. Azure Resource Group with an Azure IoT Hub (provisioned in the previous HOL)
 
 ---
@@ -132,7 +133,7 @@ The first output will be for an archive of raw data received from the device.
 
 #### View the Archived Data
 
-1. Open Azure Storage Explorer and connect to your subscription ([see the Microsoft Documentation for instructions](https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer))
+1. Open Azure Storage Explorer and connect to your subscription ([see the Microsoft Documentation for instructions](https://docs.microsoft.com/en-us/azure/vs-azure-tools-storage-manage-with-storage-explorer#connect-to-a-storage-account-or-service))
 1. Find the Storage Account you created in the previous Hands On Lab, expand the tables node, find the `archive` table and double click to open and view the archived data
 
 ### Using Stream Analytics to Store Aggregated Data
