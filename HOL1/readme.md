@@ -115,7 +115,7 @@ We'e going to create an Azure IoT Hub that will allow us to manage and communiat
 
 1. In "Location" select "North Europe"
 
-1. Click the "Create" button to create a new IoT Hub
+1. Click the "Create" button to create a new IoT Hub. The creation of this resource may take a few minutes. 
 
 1. Navigate to the the newly created IoT Hub either by clicking on the notification that appears (or by using the "Search resources, services and docs" text box at the very top of the page and typing in the name of your IoT Hub)
 
@@ -165,7 +165,7 @@ Now we're going to send some Device Messages to the IoT Hub.
 
 1. Clone or download and unzip the [AzureIotWorkshop code repository](https://github.com/M2MCloud/AzureIotWorkshop) 
 
-1. Open Visual Studio 2017 and open the soluation `"HOL1\M2MCloud.Workshops.Azure.IoT.sln"`
+1. Open Visual Studio 2017 and open the solution `"HOL1\M2MCloud.Workshops.Azure.IoT.sln"`
 
 1. Find the line below the comment 
     
@@ -225,7 +225,7 @@ Change the random number generation as required.
     
 1. If you jump back into the Azure portal you and refresh the Device Details blade, you should see your IoT Usage values change - this sometimes takes a few moments to update!
 
-![device usage dashboard](content/DeviceDetailsUsageDashboard.png)
+    ![device usage dashboard](content/DeviceDetailsUsageDashboard.png)
 
 ### Send a large Device Message file to the IoT Hub
 
@@ -285,9 +285,9 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 
     ![query explorer](content/QueryExplorerSetup.png)
 
-```sql
-SELECT * FROM devices WHERE properties.reported.CellId = '234-015-974-6065'
-```
+    ```sql
+    SELECT * FROM devices WHERE properties.reported.CellId = '234-015-974-6065'
+    ```
 
 1. Execute the query - you should be able to see your Device in the results set. 
 
@@ -304,13 +304,13 @@ We're going to send a message to the Device from the Backend Service.
 
 1. Add a message body in the text box e.g.
 
-```json
-{ "SendInterval": 10 }
-```
+    ```json
+    { "SendInterval": 10 }
+    ```
 
 and click the "Send Message" button
 
-![set a cloud message](content/CloudToDeviceStep2.png)
+    ![send a cloud message](content/CloudToDeviceStep2.png)
 
 1. Jump back into Visual Studio 
 
@@ -328,19 +328,19 @@ and click the "Send Message" button
 
 We're going to invoke a method on the connected Device directly from the Azure portal to demonstrate how an immediate action can be performed on a connected Device. 
 
-1. Run the Device simulator console app
+1. Run the Device simulator console app or return to the main menu if it's already running.
 
-1. The app is currently listening for a Direct Method invocation, so there is no need to select a menu item. The console app has to be running (i.e. connected) for the next few steps to work. 
+1. *Important* The app is currently listening for a Direct Method invocation, so there is no need to select a menu item. The console app has to be running the main menu for the next few steps to work. 
 
 1. Jump into the IoT Hub in the Azure portal and navigate to your Device detail using the Device explorer
     
 1. Click on the Direct Method button
 
-![select direct method](content/DirectMethodSetup1.png)
+    ![select direct method](content/DirectMethodSetup1.png)
 
 1. Type in "stop" or "start" into the "method name" text box
 
-![select direct method](content/DirectMethodSetup2.png)
+    ![select direct method](content/DirectMethodSetup2.png)
 
 1. Click "Invoke Method" button. Two things should happen:
     1. The Device Simulator console app should display a stop or start message

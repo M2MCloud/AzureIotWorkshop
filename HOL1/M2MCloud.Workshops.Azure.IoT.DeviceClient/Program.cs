@@ -14,7 +14,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
     class Program
     {
         //attendee to change #1
-        private const string DeviceConnectionString = "HostName=censis-workshop-lab101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=WB94k41+2OSW7uUbOrJHveL13nXCKpVqiG63syzDz8M=";
+        private const string DeviceConnectionString = "HostName=censis-workshop-101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=Y4OKitBa9euFMUh+9IWLnxt7CwfGwkFzWd0p4UJM4r4=";
         //attendee to change #2
         private static String deviceId = "956584572537578";
         private static Microsoft.Azure.Devices.Client.DeviceClient deviceClient;
