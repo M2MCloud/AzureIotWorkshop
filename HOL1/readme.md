@@ -113,7 +113,7 @@ We'e going to create an Azure IoT Hub that will allow us to manage and communiat
 
 1. In "Resource Group" select "Use existing" and select the existing `censis-workshop` resource group
 
-1. In "Location" select "UK West"
+1. In "Location" select "North Europe"
 
 1. Click the "Create" button to create a new IoT Hub
 
