@@ -7,7 +7,7 @@
     1. [Requirements](#requirements)
 1. [Instructions](#instructions)
    1. [Prerequisites](#prerequisites)
-   1. [Using Stream Analytics to Store Aggregated Data](#using-stream-analytics-to-store-aggregated-data)
+   1. [Using Stream Analytics to Archive Data](#using-stream-analytics-to-archive-data)
       1. [Create a Stream Analytics Job](#create-an-azure-stream-analytics-job)
       1. [Create The Job Input](#create-the-job-input)
       1. [Add The Archive Output](#add-the-archive-output)
@@ -64,10 +64,10 @@ We will create an Azure Stream Analytics Job which will be used to perform aggre
 1. In the `censis-workshop` Resource Group blade, select add in the top left
 
    ![add](content/add.png)
-1. In the search box type "Azure Stream Analytics" and select the suggestion
+1. In the search box type "Stream Analytics Job" and select the suggestion
 
    ![searchasa](content/searchasa.png)
-1. Select `Stream Analytics job` from the results and click `Create`
+1. Select `Stream Analytics Job` from the results and click `Create`
 
    ![create](content/createasas.png)
 1. In the `New Stream Analytics job` blade, fill in the values as follows (selecting your subscription where relevant) and click `Create`:
@@ -355,6 +355,9 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
 #### Add The Azure Function Output to the Streaming Job
 
 1. In the resource list, select the Stream Analytics Job you created earlier in this lab
+1. If the job is `Running`, click `Stop` and wait until the job stops
+
+   ![stopasa](content/stopasa.png)
 1. Under `Job Topology` select `Outputs`
 
    ![outputs](content/asaoutputs3.png)
