@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,13 +12,15 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
 {
     class Program
     {
+        private static readonly Random Rand = new Random();
         //attendee to change #1
         private const string DeviceConnectionString = "HostName=censis-workshop-101.azure-devices.net;DeviceId=956584572537578;SharedAccessKey=Y4OKitBa9euFMUh+9IWLnxt7CwfGwkFzWd0p4UJM4r4=";
         //attendee to change #2
-        private static String deviceId = "956584572537578";
+        private static string deviceId = "956584572537578";
         private static Microsoft.Azure.Devices.Client.DeviceClient deviceClient;
         private static string pressAnyKeyToReturnToTheMainMenu = "\nPress any key to return to the main menu";
         private static ConsoleColor originalConsoleColour;
+
         static void Main(string[] args)
         {
             while (true)
@@ -162,18 +162,14 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
             Console.ReadKey();
         }
 
-        //attendee to change - apply your own domain if you like and create a custom JSON shape that has:
+        //attendee to change (optional) - apply your own domain if you like and create a custom JSON shape that has:
         //1. A numerical value e.g. "oilLevel: 99"
         //2. A digital value e.g. "pumpEngineActive: true"
         private static string ConstructDataSample(int count)
         {
-            var rnd = new Random();
-            double temperature;
-            double humidity;
-            temperature = rnd.Next(20, 35);
-            humidity = rnd.Next(60, 80);
+            double temperature = Rand.Next(20, 35);
+            double humidity = Rand.Next(60, 80);
             //attendee to change #3 (optional)
-            //Todo: change the random number generation
             var dataBuffer = $"{{\"deviceId\":\"{deviceId}\",\"messageId\":{count},\"temperature\":{temperature},\"humidity\":{humidity}, \"motorActive\":true}}";
             return dataBuffer;
         }
