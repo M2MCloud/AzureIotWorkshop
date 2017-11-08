@@ -235,7 +235,7 @@ We're going to send a large Device message file to the IoT Hub.
 
 1. Choose option "2" from the Device menu, "Send large Device Message file"
 
-1. Grab a full file path that points to a local, non-sensitive file and paste the value when prompted. 
+1. Grab a full file path that points to any local, non-sensitive file and paste the value when prompted. Any (non-sensitive) file on your workstation will do! 
 
 Let's have a look at the file the Device just uploaded:
 
