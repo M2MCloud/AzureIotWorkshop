@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
@@ -97,7 +98,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
 
         private static async Task UploadDeviceFile()
         {
-            Console.WriteLine("\nWhat is the full file path of the massive Device Message samples?");
+            Console.WriteLine("\nWhat is the full file path of the Device File?");
             var path = Console.ReadLine();
             if(path==null)
                 throw new InvalidOperationException("Please input a valid file path");
@@ -111,6 +112,9 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
             {
                 await deviceClient.UploadToBlobAsync(file.Name, sourceData);
             }
+            Console.WriteLine("The file has been uploaded");
+            Console.WriteLine(pressAnyKeyToReturnToTheMainMenu);
+            Console.ReadKey();
         }
 
         static async Task ReadDeviceTwin()
@@ -152,6 +156,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
                 var eventMessage = new Message(Encoding.UTF8.GetBytes(dataBuffer));
                 Console.WriteLine($"\n> Sending message: {count}, Data: [{dataBuffer}]");
                 await deviceClient.SendEventAsync(eventMessage);
+                Thread.Sleep(500);
             }
             Console.WriteLine(pressAnyKeyToReturnToTheMainMenu);
             Console.ReadKey();
@@ -182,7 +187,7 @@ namespace M2MCloud.Workshops.Azure.IoT.DeviceClient
             {
                 try
                 {
-                    receivedMessage = await deviceClient.ReceiveAsync(TimeSpan.FromSeconds(1));
+                    receivedMessage = await deviceClient.ReceiveAsync(TimeSpan.FromSeconds(0.5));
                     if (receivedMessage == null) continue;
                     var messageData = Encoding.ASCII.GetString(receivedMessage.GetBytes());
                     Console.WriteLine("\n\t{0}> Received message: {1}", DateTime.Now.ToLocalTime(), messageData);
