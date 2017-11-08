@@ -239,10 +239,10 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
 
 1. In the `censis-workshop` Resource Group blade, select add in the top left
 
-   ![add](content/add.png)
+   ![add](content/add.PNG)
 1. In the search box type "function app" and select the suggestion (Function App)
 
-   ![searchfuncapp](content\searchfuncapp.png)
+   ![searchfuncapp](content/searchfuncapp.png)
 1. Select `Function App` and click `Create`
 
    ![createfuncapp](content/createfuncapp.png)
