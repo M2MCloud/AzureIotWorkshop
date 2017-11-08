@@ -259,7 +259,7 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
 1. Ensure `Webhook + API` and `CSharp` are selected and click `Create this function`
 
    ![createfunc](content/createfunc.png)
-1. You should then see the Function Editor. Replace all the code with the following (replacing `you@yourdomain.com` with your own email address) and click `Save`:
+1. You should then see the Function Editor. Replace all the code with the following **replacing `you@yourdomain.com` with your own email address** and click `Save`:
 
     ```csharp
     #r "SendGrid"
@@ -416,7 +416,8 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
 1. Change `\"motorActive\":true` to `\"motorActive\":false`
     > Note: If you changed the digital property in the first lab, change the value of your digital property instead of `motorActive`
 1. Start the device simulator again and send some more events
-1. You should then receive an email with an alert about the change in state
+1. You should then receive an email with an alert about the change in state. 
+   >Note: We are using SendGrid as an email provider. It might take a few minutes for the email to arrive.
 
 ### If You Have Time
 
