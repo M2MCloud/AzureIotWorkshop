@@ -254,6 +254,8 @@ Let's have a look at the file the Device just uploaded:
 1. Navigate to the blob and you will see the file that was just uploaded.
     ![blob item](content/FileUploadBlobDetails.png)
 
+1. If you've time...Try uploading more files and observe the results when the file name is the same.
+
 ### Read Device Twin Properties
 We're going to have a look at the desired and reported Device Twin properties to demonstrate how they can be used to configure a Device and receive state from a Device. 
 
@@ -291,6 +293,10 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 
 1. Execute the query - you should be able to see your Device in the results set. 
 
+1. If you've time...
+    1. Try adding more Device Twin Properties and see if you can find the Device Twin blade in the Azure portal -  observe any differences between the Device Twin represenations in the portal and in the console app. 
+    1. Try doing more complex queries.  
+
 ### Receive Cloud to Device Message
 We're going to send a message to the Device from the Backend Service. 
 
@@ -322,7 +328,7 @@ and click the "Send Message" button
 
 1. Leave the console app running as it is and send some more messages as described in the above step. 
 
-1. If you like, you can jump back into the Azure Portal in the Message to Device blade and add message properties and click the "Send Message" button - the message properties should be emitted in the running Device Simulator console app. 
+1. If you've time... you can jump back into the Azure Portal in the Message to Device blade and add message properties and click the "Send Message" button - the message properties should be emitted in the running Device Simulator console app. 
 
 ### Invoke Device Direct Method
 
@@ -347,6 +353,8 @@ We're going to invoke a method on the connected Device directly from the Azure p
     1. The Result text box in the Azure Portal Direct Method blade (hightlighted in red above ^) should contain a result confirmation message from the Device
 
 1. Repeat the above steps but this time add a JSON payload as a "Payload" parameter (make sure it's valid JSON or the Device Simulator app will wig out) and you should see the payload appear in the Device Simulator. 
+
+1. If you've time...add different payloads and modify the simulator to react differently to those payloads.
 
 [END OF LAB 1]
 
