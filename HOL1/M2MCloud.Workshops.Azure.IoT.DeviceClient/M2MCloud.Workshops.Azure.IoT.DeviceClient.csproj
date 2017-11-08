@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{84D5CE8B-D2AF-4C4E-9076-EEBD8FC92B3C}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AzureIoTWorkshop</RootNamespace>
+    <RootNamespace>M2MCloud.Workshops.Azure.IoT.DeviceClient</RootNamespace>
     <AssemblyName>AzureIoTWorkshop</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
