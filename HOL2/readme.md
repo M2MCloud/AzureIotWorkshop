@@ -1,4 +1,4 @@
-# Processing IoT Data - Hands On Lab
+# Processing & Storing IoT Data - Hands On Lab
 
 ## Contents
 
@@ -390,6 +390,7 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
        motorActive <> LAG(motorActive, 1) OVER (PARTITION BY deviceId LIMIT DURATION(minute, 10) WHEN motorActive IS NOT NULL) AND
        LAG(motorActive, 1) OVER (PARTITION BY deviceId LIMIT DURATION(minute, 10) WHEN motorActive IS NOT NULL) IS NOT NULL
    ```
+   > Note: If you changed the digital property in the first lab, change `motorActive` property name to your digital property name.
 1. Click Save then click the cross on the `Query` blade to return to the job overview.
 
    ![qrysv3](content/qrysv3.png)
@@ -413,21 +414,26 @@ The message payload that is being sent to the Azure IoT Hub contains a digital (
     }
    ```
 1. Change `\"motorActive\":true` to `\"motorActive\":false`
+    > Note: If you changed the digital property in the first lab, change the value of your digital property instead of `motorActive`
 1. Start the device simulator again and send some more events
 1. You should then receive an email with an alert about the change in state
 
 ### If You Have Time
 
-1. Try experimenting with the Aggregate Query in the Stream Analytics Job. Remember to stop the Job before modifying the query. Try functions other than `AVG`. Full documentation of the full set of Aggregate Functions can be found in the [documentation](https://msdn.microsoft.com/en-us/library/azure/dn931787.aspx). The full documentation for Stream Analytics can be found on [MSDN](https://msdn.microsoft.com/library/azure/dn834998)
-1. Try changing the condition where a status change event will be raised by Stream Analytics to require the state to have changed in 2 messages before raising the event. Documentation about the `LAG` function can be found [here](https://msdn.microsoft.com/en-us/library/azure/dn966240.aspx)
-1. Try changing the code in the Azure Function to send to more recipients or update the content of the email body
-1. Update the Azure Function to also output the event to [Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-documentdb), [Table Storage](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-table), [Blob Storage](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob) or a [Storage Queue](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue). The full documentation on [Azure Functions Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings) is excellent
+Here are some things you can do if you have time left over at the end of the lab. You don't have to do all _or any_ of them. You can also investigate something not listed which interests you too. Leave enough time to [Clean Up](#cleaning-up) afterwards if you want to destroy the resources.
+
+* Try experimenting with the Aggregate Query in the Stream Analytics Job. Remember to stop the Job before modifying the query. Try functions other than `AVG(...)`. Full documentation of the full set of Aggregate Functions can be found in the [documentation](https://msdn.microsoft.com/en-us/library/azure/dn931787.aspx). The full documentation for Stream Analytics can be found on [MSDN](https://msdn.microsoft.com/library/azure/dn834998)
+* Try changing the condition where a status change event will be raised by Stream Analytics to require the state to have changed in 2 messages before raising the event. Documentation about the `LAG(...)` function can be found [here](https://msdn.microsoft.com/en-us/library/azure/dn966240.aspx)
+* Try changing the code in the Azure Function to send to more recipients or update the content of the email body
+* Update the Azure Function to also output the event to [Cosmos DB](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-documentdb), [Table Storage](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-table), [Blob Storage](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob) or a [Storage Queue](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue). The full documentation on [Azure Functions Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings) is excellent
+* When we created the Cosmos DB account, we ticked the box that said "Geo-Redundancy". This means that all data in any collection created is automatically replicated to a readable secondary in the partner region within the selected Azure Geography. In this case, we selected North Europe, so replication was configured to West Europe. Navigate to the Cosmos DB account and click on the World Map labelled "Regions" and add replication to any other Azure Region in the world.
+* When we created our Function App, we ticked enabled Application Insights. This shows a live stream of what's happening in the app as well as historic telemetry. Navigate to the App Insights account to see the telemetry that was gathered.
 
 ### Cleaning Up
 
 The final part of the workshop is to clean up all the resources you created. While resources are running, you are incurring cost. Some resources cannot be stopped, so deleting them is the only way to stop paying for them. You can, if you wish, leave the resources in place if you want to come back to the workshop at a later date. If you want to delete the resources you created, follow these steps:
 
-1. Close the Stream Analytics Job overview blade (if you still have it open) to return to the `censis-workshop` blade
+1. Close the Stream Analytics Job overview blade (if you still have it open) to return to the `censis-workshop` Resource Group blade
 1. Click `Delete resource group`
 
    ![delrg](content/delrg.png)
