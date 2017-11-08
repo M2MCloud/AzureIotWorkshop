@@ -295,7 +295,7 @@ Lets make this Device Twins a bit more interesting by adding a Desired state val
 
 1. If you've time...
     1. Try adding more Device Twin Properties and see if you can find the Device Twin blade in the Azure portal -  observe any differences between the Device Twin represenations in the portal and in the console app. 
-    1. Try doing more complex queries.  
+    1. Try doing more complex queries by consulting the [IoT Hub Query Language](#https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language)
 
 ### Receive Cloud to Device Message
 We're going to send a message to the Device from the Backend Service. 
